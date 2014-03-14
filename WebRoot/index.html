@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+<title>幸运大转盘抽奖</title>
+<link href="files/activity-style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="activity-lottery-winning">
+<div class="main" >
+<script type="text/javascript">
+var loadingObj = new loading(document.getElementById('loading'),{radius:20,circleLineWidth:8});   
+    loadingObj.show();   
+</script>
+
+ <div id="outercont" >
+	<div id="outer-cont" style="overflow:hidden;">
+		<div id="outer"><img src="files/activity-lottery-1.png" width="310px"></div>
+	</div>
+	<div id="inner-cont">
+		<div id="inner"><img src="files/activity-lottery-2.png"></div>
+	</div>
+	</div>
+	
+<div class="content">
+	<div class="boxcontent boxyellow" id="result" style="display:none">
+		<div class="box">
+		<div class="title-orange"><span>恭喜你中奖了</span></div>
+			<div class="Detail">			            
+			<p>你中了：<span class="red" id="prizetype">一等奖</span></p>			               
+			<!-- 
+			<p>
+			 <input name="" class="px" id="tel" type="text" placeholder="输入您的手机号码">
+			</p>
+			<p>
+			<input class="pxbtn" id="save-btn" name="提 交" type="button" value="提 交">
+			</p>
+			-->
+			</div>
+		</div>
+	</div>
+<div class="boxcontent boxyellow">
+<div class="box">
+<div class="title-green"><span>奖项设置：</span></div>
+	<div class="Detail">
+		<p>一等奖：网时奖励200小时 。奖品数量：3 </p>
+		<p>二等奖：网时奖励100小时 。奖品数量：5 </p>
+		<p>三等奖：广播台免费点首歌 。奖品数量：10 </p>
+	</div>
+</div>
+</div>
+<div class="boxcontent boxyellow">
+<div class="box">
+<div class="title-green">活动说明：</div>
+<div class="Detail">
+<p>本次活动每人可以转 1次 </p>
+             
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script type="text/javascript" src="files/jquery.min.js"></script>
+<script type="text/javascript" src="files/jQueryRotate.2.2.js"></script>
+<script type="text/javascript" src="files/jquery.easing.min.js"></script>
+<script type="text/javascript">
+$(function(){ 
+     $("#inner").click(function(){ 
+        lottery(); 
+    }); 
+}); 
+function lottery(){ 
+	var weChatName = 'all';
+    $.ajax({ 
+        type: 'POST', 
+        url: '/award/showlucky', 
+        data:"p=1",
+        dataType: 'json', 
+        cache: false, 
+        error: function(){ 
+            alert('很遗憾，您没有中奖!'); 
+            return false; 
+        }, 
+        
+        success:function(json){ 
+            $("#inner").unbind('click').css("cursor","default"); 
+            var a = parseInt(json.angle); //角度 
+            var p = json.prize; //奖项 
+            var msg = json.msg; //提示信息
+            $("#outer").rotate({ //inner内部指针转动，outer，外部转盘转动
+                duration:5000, //转动时间 
+                angle: 0, //开始角度 
+                animateTo:3600+a, //转动角度 
+                easing: $.easing.easeOutSine, //动画扩展 
+                callback: function(){ 
+                    alert(msg);
+                    if(p == "0" || p == "1" || p == "5" || p == "9"){
+                    	$("#prizetype").text(msg);
+                    	$("#result").show();
+                    }
+                    
+                    
+                    return false;
+                } 
+            }); 
+        } 
+    }); 
+}
+</script>
+</body></html>
